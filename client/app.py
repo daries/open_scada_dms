@@ -1181,13 +1181,13 @@ if __name__ == '__main__':
   mongodb_host = "mongodb"
   mongodb_db = "scada"
   mongodb_username="dbuser"
-  mongodb_password="mongo_secret"
+  mongodb_password="ylGaPhSRffT1Xh6q63c8E5-As4gWJI61FU8YiHXHr40NaSyeyKU7sVt0WY-PnUUj"
 
-  redis_host = "localhost"
-  redis_password = "redis_secret"
+  redis_host = "10.14.152.231"
+  redis_password = "t84hl8DRRa-8mgH6LqroKdGDQzduDC_ffciHbwUuVxchSFu2Q-xBxLeMRtt_5KWo"
 
-  influxdb_host = "http://127.0.0.1:8086"
-  influxdb_api = "influxdb_secret"
+  influxdb_host = "http://10.14.152.231:8086"
+  influxdb_api = "VNyKAQwXogDhhPh2EAs26MaLUIXqFwYf9_2QcPDQjia2yet-m84wsduWYIeG_eFe"
   influxdb_org = "scada"
 
   if len(sys.argv) > 1:
