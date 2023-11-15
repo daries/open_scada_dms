@@ -3,9 +3,10 @@ from lib60870 import *
 from urllib.parse import urlparse
 import time
 
+
 class IEC60870_5_104_client:
     # Connection event handler 
-    def connectionHandler (self, parameter, connection, event):
+    def connectionHandler(self, parameter, connection, event):
         tupl = ctypes.cast(parameter, ctypes.py_object).value
         if event == CS104_CONNECTION_OPENED:
             print("Connection established")
@@ -20,10 +21,9 @@ class IEC60870_5_104_client:
             print("Received STOPDT_CON")
             self.connections[tupl]['state'] = 1
 
-
-    #CS101_ASDUReceivedHandler implementation
-    #For CS104 the address parameter has to be ignored
-    def asduReceivedHandler (self, parameter, address, asdu):
+    # CS101_ASDUReceivedHandler implementation
+    # For CS104 the address parameter has to be ignored
+    def asduReceivedHandler(self, parameter, address, asdu):
         data = {}
         tupl = ctypes.cast(parameter, ctypes.py_object).value
         if not tupl in self.connections:
@@ -41,14 +41,13 @@ class IEC60870_5_104_client:
 
         if (CS101_ASDU_getTypeID(asdu) == M_ME_TE_1):
 
-            print("  measured scaled values with CP56Time2a timestamp:")
+            print("  measured scaled values with CP56Time2a timestamp: ")
 
             for i in range(CS101_ASDU_getNumberOfElements(asdu)):
-
-                io = cast(CS101_ASDU_getElement(asdu, i), MeasuredValueScaledWithCP56Time2a) 
-                ioa = InformationObject_getObjectAddress(cast(io, InformationObject) )
-                value = MeasuredValueScaled_getValue(cast(io, MeasuredValueScaled) )
-                print("    IOA: %i value: %i" % (ioa,value ))
+                io = cast(CS101_ASDU_getElement(asdu, i), MeasuredValueScaledWithCP56Time2a)
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = MeasuredValueScaled_getValue(cast(io, MeasuredValueScaled))
+                print("    IOA: %i value: %i" % (ioa, value))
                 self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': M_ME_TE_1}
                 data[ioa] = {'value': value, 'ASDU': M_ME_TE_1}
                 MeasuredValueScaledWithCP56Time2a_destroy(io)
@@ -57,11 +56,10 @@ class IEC60870_5_104_client:
             print("  single point information:")
 
             for i in range(CS101_ASDU_getNumberOfElements(asdu)):
-
-                io = cast(CS101_ASDU_getElement(asdu, i), SinglePointInformation) 
-                ioa = InformationObject_getObjectAddress(cast(io,InformationObject) )
-                value = SinglePointInformation_getValue(cast(io,SinglePointInformation) )
-                print("    IOA: %i value: %i" % (ioa,value ))
+                io = cast(CS101_ASDU_getElement(asdu, i), SinglePointInformation)
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = SinglePointInformation_getValue(cast(io, SinglePointInformation))
+                print("    IOA: %i value: %i" % (ioa, value))
                 self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': M_SP_NA_1}
                 data[ioa] = {'value': value, 'ASDU': M_SP_NA_1}
                 SinglePointInformation_destroy(io)
@@ -69,11 +67,10 @@ class IEC60870_5_104_client:
             print("  double point information:")
 
             for i in range(CS101_ASDU_getNumberOfElements(asdu)):
-
                 io = cast(CS101_ASDU_getElement(asdu, i), DoublePointInformation)
-                ioa = InformationObject_getObjectAddress(cast(io,InformationObject) ) 
-                value = DoublePointInformation_getValue(cast(io,DoublePointInformation) )
-                print("    IOA: %i value: %i" % (ioa,value ))
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = DoublePointInformation_getValue(cast(io, DoublePointInformation))
+                print("    IOA: %i value: %i" % (ioa, value))
                 self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': M_DP_NA_1}
                 data[ioa] = {'value': value, 'ASDU': M_DP_NA_1}
                 DoublePointInformation_destroy(io)
@@ -81,22 +78,64 @@ class IEC60870_5_104_client:
             print("  measured value scaled:")
 
             for i in range(CS101_ASDU_getNumberOfElements(asdu)):
-
-                io = cast(CS101_ASDU_getElement(asdu, i), MeasuredValueScaled) 
-                ioa = InformationObject_getObjectAddress(cast(io,InformationObject) )
-                value = MeasuredValueScaled_getValue(cast(io,MeasuredValueScaled) )
-                print("    IOA: %i value: %i" % (ioa,value ))
+                io = cast(CS101_ASDU_getElement(asdu, i), MeasuredValueScaled)
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = MeasuredValueScaled_getValue(cast(io, MeasuredValueScaled))
+                print("    IOA: %i value: %i" % (ioa, value))
                 self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': M_ME_NB_1}
                 data[ioa] = {'value': value, 'ASDU': M_ME_NB_1}
-                MeasuredValueScaled_destroy(io)     
+                MeasuredValueScaled_destroy(io)
+        elif (CS101_ASDU_getTypeID(asdu) == M_ME_NA_1):
+            print("  measured value scaled:")
+
+            for i in range(CS101_ASDU_getNumberOfElements(asdu)):
+                io = cast(CS101_ASDU_getElement(asdu, i), MeasuredValueScaled)
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = MeasuredValueScaled_getValue(cast(io, MeasuredValueScaled))
+                print("    IOA: %i value: %i" % (ioa, value))
+                self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': M_ME_NA_1}
+                data[ioa] = {'value': value, 'ASDU': M_ME_NA_1}
+                MeasuredValueScaled_destroy(io)
+        elif (CS101_ASDU_getTypeID(asdu) == M_ME_NC_1):
+            print("  measured value scaled:")
+
+            for i in range(CS101_ASDU_getNumberOfElements(asdu)):
+                io = cast(CS101_ASDU_getElement(asdu, i), MeasuredValueScaled)
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = MeasuredValueScaled_getValue(cast(io, MeasuredValueScaled))
+                print("    IOA: %i value: %i" % (ioa, value))
+                self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': M_ME_NC_1}
+                data[ioa] = {'value': value, 'ASDU': M_ME_NC_1}
+                MeasuredValueScaled_destroy(io)
+        elif (CS101_ASDU_getTypeID(asdu) == M_ME_TF_1):
+            print("  measured value scaled:")
+
+            for i in range(CS101_ASDU_getNumberOfElements(asdu)):
+                io = cast(CS101_ASDU_getElement(asdu, i), MeasuredValueScaled)
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = MeasuredValueScaled_getValue(cast(io, MeasuredValueScaled))
+                print("    IOA: %i value: %i" % (ioa, value))
+                self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': M_ME_TF_1}
+                data[ioa] = {'value': value, 'ASDU': M_ME_TF_1}
+                MeasuredValueScaled_destroy(io)
+        elif (CS101_ASDU_getTypeID(asdu) == M_ME_TD_1):
+            print("  measured value scaled:")
+
+            for i in range(CS101_ASDU_getNumberOfElements(asdu)):
+                io = cast(CS101_ASDU_getElement(asdu, i), MeasuredValueScaled)
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = MeasuredValueScaled_getValue(cast(io, MeasuredValueScaled))
+                print("    IOA: %i value: %i" % (ioa, value))
+                self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': M_ME_TD_1}
+                data[ioa] = {'value': value, 'ASDU': M_ME_TD_1}
+                MeasuredValueScaled_destroy(io)
         elif (CS101_ASDU_getTypeID(asdu) == C_SC_NA_1):
             print("received single command response")
             for i in range(CS101_ASDU_getNumberOfElements(asdu)):
-
-                io = cast(CS101_ASDU_getElement(asdu, i), SinglePointInformation) 
-                ioa = InformationObject_getObjectAddress(cast(io,InformationObject) )
-                value = SinglePointInformation_getValue(cast(io,SinglePointInformation) )
-                print("    IOA: %i value: %i" % (ioa,value ))
+                io = cast(CS101_ASDU_getElement(asdu, i), SinglePointInformation)
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = SinglePointInformation_getValue(cast(io, SinglePointInformation))
+                print("    IOA: %i value: %i" % (ioa, value))
                 self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': C_SC_NA_1}
                 data[ioa] = {'value': value, 'ASDU': C_SC_NA_1}
                 SinglePointInformation_destroy(io)
@@ -104,24 +143,23 @@ class IEC60870_5_104_client:
         elif (CS101_ASDU_getTypeID(asdu) == C_DC_NA_1):
             print("received double command response")
             for i in range(CS101_ASDU_getNumberOfElements(asdu)):
-
-                io = cast(CS101_ASDU_getElement(asdu, i), DoublePointInformation) 
-                ioa = InformationObject_getObjectAddress(cast(io,InformationObject) )
-                value = DoublePointInformation_getValue(cast(io,DoublePointInformation) )
-                print("    IOA: %i value: %i" % (ioa,value ))
+                io = cast(CS101_ASDU_getElement(asdu, i), DoublePointInformation)
+                ioa = InformationObject_getObjectAddress(cast(io, InformationObject))
+                value = DoublePointInformation_getValue(cast(io, DoublePointInformation))
+                print("    IOA: %i value: %i" % (ioa, value))
                 self.connections[tupl]['data'][ioa] = {'value': value, 'ASDU': C_DC_NA_1}
                 data[ioa] = {'value': value, 'ASDU': C_DC_NA_1}
                 DoublePointInformation_destroy(io)
 
         elif (CS101_ASDU_getTypeID(asdu) == C_TS_TA_1):
             self.connections[tupl]['testfr_received'] += 1
-            print("  received test command with timestamp. send: %i, received: %i" % (self.connections[tupl]['testfr_send'],self.connections[tupl]['testfr_received']))
+            print("  received test command with timestamp. send: %i, received: %i" % (
+            self.connections[tupl]['testfr_send'], self.connections[tupl]['testfr_received']))
             return True
 
         if self.callback != None and len(data) > 0:
             self.callback(tupl, data)
         return True
-
 
     def __init__(self, callback):
         self.connections = {}
@@ -129,8 +167,6 @@ class IEC60870_5_104_client:
         self.callback = callback
         self.p_connectionHandler = CS104_ConnectionHandler(self.connectionHandler)
         self.p_asduReceivedHandler = CS101_ASDUReceivedHandler(self.asduReceivedHandler)
-
-
 
     # retrieve an active connection to an RTU, and up to date datamodel, stored in 'connections'
     def getRTU(self, host, port):
@@ -145,7 +181,8 @@ class IEC60870_5_104_client:
         if tupl in self.connections and self.connections[tupl]["con"] != None:
             if self.connections[tupl]["GI"] == False:
                 con = self.connections[tupl]["con"]
-                if CS104_Connection_sendInterrogationCommand(con, CS101_COT_ACTIVATION, 1, IEC60870_QOI_STATION) == False:
+                if CS104_Connection_sendInterrogationCommand(con, CS101_COT_ACTIVATION, 1,
+                                                             IEC60870_QOI_STATION) == False:
                     print("error: could not send GI")
                     CS104_Connection_sendStopDT(con)
                     CS104_Connection_destroy(con)
@@ -154,22 +191,22 @@ class IEC60870_5_104_client:
                     return -1
 
                 counter = 0
-                while self.connections[tupl]["GI"] == False and counter < self.timeout: 
+                while self.connections[tupl]["GI"] == False and counter < self.timeout:
                     counter += 1
                     time.sleep(1)
                 if self.connections[tupl]["GI"] == True:
                     return 0
                 else:
                     CS104_Connection_sendStopDT(con)
-		            #we could not perform a GI, so remove connection
+                    # we could not perform a GI, so remove connection
                     CS104_Connection_destroy(con)
                     self.connections[tupl]["con"] = None
                     self.connections[tupl]["state"] = 0
                     return -1
             else:
-		#we have a connection and a model
+                # we have a connection and a model
                 return 0
-		
+
         if not tupl in self.connections or self.connections[tupl]["con"] == None:
             self.connections[tupl] = {}
             self.connections[tupl]["con"] = None
@@ -195,13 +232,14 @@ class IEC60870_5_104_client:
             CS104_Connection_setASDUReceivedHandler(con, self.p_asduReceivedHandler, id(self.connections[tupl]['self']))
 
             counter = 0
-            while self.connections[tupl]["state"] == 0 and counter < self.timeout: 
+            while self.connections[tupl]["state"] == 0 and counter < self.timeout:
                 counter += 1
                 time.sleep(1)
 
             if self.connections[tupl]["state"] == 2:
                 # read the model
-                if CS104_Connection_sendInterrogationCommand(con, CS101_COT_ACTIVATION, 1, IEC60870_QOI_STATION) == False:
+                if CS104_Connection_sendInterrogationCommand(con, CS101_COT_ACTIVATION, 1,
+                                                             IEC60870_QOI_STATION) == False:
                     print("error: could not send GI")
                     CS104_Connection_sendStopDT(con)
                     CS104_Connection_destroy(con)
@@ -211,7 +249,7 @@ class IEC60870_5_104_client:
                 # store the active connection
                 self.connections[tupl]["con"] = con
                 counter = 0
-                while self.connections[tupl]["GI"] == False and counter < self.timeout: 
+                while self.connections[tupl]["GI"] == False and counter < self.timeout:
                     counter += 1
                     time.sleep(1)
                 if self.connections[tupl]["GI"] == True:
@@ -223,8 +261,7 @@ class IEC60870_5_104_client:
                 self.connections[tupl]["con"] = None
             return -1
 
-
-    def parseref(self,ref):
+    def parseref(self, ref):
         uri_ref = urlparse(ref)
         port = uri_ref.port
         if port == "" or port == None:
@@ -240,29 +277,28 @@ class IEC60870_5_104_client:
 
         tupl = uri_ref.hostname + ":" + str(port)
 
-        #check if connection is active, or reconnect
+        # check if connection is active, or reconnect
         err = self.getRTU(uri_ref.hostname, port)
         if err == 0:
             con = self.connections[tupl]['con']
             if not con:
                 print("no valid connection")
-                return None		
+                return None
 
             model = self.connections[tupl]['data']
             if not model:
                 print("no valid model")
                 return None
-			
+
             _ref = uri_ref.path[1:].split("/")
             type = _ref[0]
             ioa = _ref[1]
-            return {"RTU":self.connections[tupl], "type":type, "ioa":int(ioa) }
+            return {"RTU": self.connections[tupl], "type": type, "ioa": int(ioa)}
 
-
-    def select(self,ref, value):
-        obj = self.parseref(ref) 
+    def select(self, ref, value):
+        obj = self.parseref(ref)
         if obj != None:
-            ca = 1 # common address
+            ca = 1  # common address
             if obj['type'] == "SinglePointCommand":
                 dc = cast(SingleCommand_create(None, obj['ioa'], value, True, 0), InformationObject)
                 print("Send select command C_SC_NA_1")
@@ -277,11 +313,10 @@ class IEC60870_5_104_client:
             return 1
         return 0
 
-
-    def operate(self,ref, value):
-        obj = self.parseref(ref) 
+    def operate(self, ref, value):
+        obj = self.parseref(ref)
         if obj != None:
-            ca = 1 # common address
+            ca = 1  # common address
             if obj['type'] == "SinglePointCommand":
                 dc = cast(SingleCommand_create(None, obj['ioa'], value, False, 0), InformationObject)
                 print("Send operate command C_SC_NA_1")
@@ -319,21 +354,20 @@ class IEC60870_5_104_client:
                 self.connections[tupl]["state"] = 0
                 return -1
 
-            newTime = sCP56Time2a() 
+            newTime = sCP56Time2a()
             CP56Time2a_createFromMsTimestamp(CP56Time2a(newTime), Hal_getTimeInMs())
             if CS104_Connection_sendTestCommandWithTimestamp(con, 1, 0x4938, newTime) == False:
                 print("error: could not send testframe, closing connection")
                 CS104_Connection_sendStopDT(con)
                 CS104_Connection_destroy(con)
                 self.connections[tupl]["con"] = None
-                self.connections[tupl]["state"] = 0              
+                self.connections[tupl]["state"] = 0
                 return -1
 
             self.connections[tupl]['testfr_send'] += 1
             return 0
 
-
-    def removeRTU(self,host,port):
+    def removeRTU(self, host, port):
         if port == "" or port == None:
             port = 2404
 
@@ -349,14 +383,15 @@ class IEC60870_5_104_client:
 def testcallb(tupl, data):
     print("RTU:" + tupl + " - update:" + str(data))
 
-#test the class
-if __name__== "__main__":
+
+# test the class
+if __name__ == "__main__":
     client = IEC60870_5_104_client(testcallb)
     if client.getRTU("localhost", 2404) == 0:
         tupl = "localhost:2404"
         # perform read of latest data
         print(client.connections[tupl]["data"])
-        #perform operate
+        # perform operate
         if client.select("iec60870-5-104://localhost:2404/DoublePointCommand/6000", 1) == 1:
             if client.operate("iec60870-5-104://localhost:2404/DoublePointCommand/6000", 1) == 1:
                 print("oper success")
@@ -364,5 +399,3 @@ if __name__== "__main__":
                 print("oper failed")
         else:
             print("select failed")
-
-
