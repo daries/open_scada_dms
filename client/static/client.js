@@ -649,8 +649,10 @@ function open_control(event,datapoint){
   sidebar._container.querySelector('#info_control_int').style.display = "none";
 
   sidebar._container.querySelector('#info_control').style.display = "block";
-  sidebar._container.querySelector('#control_element').value = control_element;
-  sidebar._container.querySelector('#control_element').title = control_element;
+
+  //add value to control element
+  //sidebar._container.querySelector('#control_element').value = control_element;
+  //sidebar._container.querySelector('#control_element').title = control_element;
   if(type == "bool_SBO"){
     //status = true/false
     //oper   = true/false (suggest inverse)
@@ -666,6 +668,10 @@ function open_control(event,datapoint){
     sidebar._container.querySelector('#info_control_doublepos_SBO').style.display = "block";
     sidebar._container.querySelector('#status_value').value = local_data_cache[status_point] == 1? "CLOSE" : "OPEN";
     sidebar._container.querySelector('#control_value_doublepos').value = local_data_cache[status_point]==1? 2:1;
+
+    //add value to control element
+    sidebar._container.querySelector('#control_element').value = local_data_cache[status_point] == 1? "iec60870-5-104://10.14.69.100:2404/SinglePointCommand/2818" : "iec60870-5-104://10.14.69.100:2404/SinglePointCommand/2819";
+    sidebar._container.querySelector('#control_element').title = local_data_cache[status_point] == 1? "iec60870-5-104://10.14.69.100:2404/SinglePointCommand/2818" : "iec60870-5-104://10.14.69.100:2404/SinglePointCommand/2819";
 
   } else if(type == "int_SBO"){
     //status is value
