@@ -4,3 +4,5 @@ eventlet==0.33.3
 redis
 influxdb-client
 pymongo
+flasgger==0.9.5
+
