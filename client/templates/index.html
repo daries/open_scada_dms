@@ -136,7 +136,7 @@
 
   <div id="modal-1" class="modal-window">
     <h2>Rules</h2>
-    <textarea style="width:580px;height:600px;"
+    <!-- <textarea style="width:580px;height:600px;"
       class="" 
       id="edit_rules" 
       name="edit_rules" 
@@ -144,8 +144,31 @@
       spellcheck="false" 
       autofocus="" 
       placeholder="{&quot;rules&quot;:&quot;🎉&quot;}" 
-      rows="15"></textarea><br>
-    <button class="modal-btn modal-save">Save</button>&nbsp;&nbsp;
+      rows="15"></textarea><br> -->
+      <table>
+        <tr>
+            <td><label for="dataprovider">Data Provider (IP:Port):</label></td>
+            <td><input type="text" id="dataprovider" name="dataprovider" disabled></td>
+        </tr>
+        <tr>
+            <td><label for="enabled">Enabled:</label></td>
+            <td>
+                <select id="enabled" name="enabled" required>
+                    <option value="1">True</option>
+                    <option value="0">False</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="IFS">IFS Name:</label></td>
+            <td><input type="text" id="IFS" name="IFS" required></td>
+        </tr>
+        <tr>
+            <td><label for="type">Protocol Type:</label></td>
+            <td><input type="text" id="type" name="type" required></td>
+        </tr>
+      </table>
+    <button class="modal-btn modal-save">Update</button>&nbsp;&nbsp;
     <button class="modal-btn modal-hide">Close</button>
     <div id="modal-1_error-message"></div>
   </div>
@@ -179,7 +202,7 @@
 
   <div id="modal-2" class="modal-window">
     <h2>dataprovider</h2>
-    <textarea style="width:400px;height:100px;"
+    <!-- <textarea style="width:400px;height:100px;"
       class="" 
       id="edit_dataprovider" 
       name="edit_dataprovider" 
@@ -187,7 +210,37 @@
       spellcheck="false" 
       autofocus="" 
       placeholder="{&quot;dataprovider&quot;:&quot;🎉&quot;}" 
-      rows="6"></textarea><br>
+      rows="6"></textarea><br> -->
+    <br>
+
+
+    <!-- add form data provider -->
+    <table>
+      <tr>
+          <td><label for="dataprovider">Data Provider (IP:Port):</label></td>
+          <td><input type="text" id="dataprovider" name="dataprovider" required></td>
+      </tr>
+      <tr>
+          <td><label for="enabled">Enabled:</label></td>
+          <td>
+              <select id="enabled" name="enabled" required>
+                  <option value="1">True</option>
+                  <option value="0">False</option>
+              </select>
+          </td>
+      </tr>
+      <tr>
+          <td><label for="IFS">IFS Name:</label></td>
+          <td><input type="text" id="IFS" name="IFS" required></td>
+      </tr>
+      <tr>
+          <td><label for="type">Protocol Type:</label></td>
+          <td><input type="text" id="type" name="type" required></td>
+      </tr>
+    </table>
+
+    <br>
+
     <button class="modal-btn modal-save">Save</button>&nbsp;&nbsp;
     <button class="modal-btn modal-delete">Delete</button>&nbsp;&nbsp;
     <button class="modal-btn modal-hide">Close</button>

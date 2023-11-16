@@ -1097,8 +1097,7 @@ def edit_dataprovider(data):
   except:
     logger.error("could not edit dataprovider")
     return False
-
-
+  
   # delete dataprovider's from mongodb
 @socketio.on('delete_dataprovider', namespace='')
 def del_dataprovider(uuid):
