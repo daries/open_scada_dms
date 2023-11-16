@@ -10,7 +10,7 @@ function init_dataproviders(){
 
     function refresh_dataproviders_table(){
       socket.emit('get_dataproviders',{},function(result){
-        //console.log(result);
+        console.log(result);
         table.replaceData(result);
       });
     }
@@ -41,11 +41,27 @@ function init_dataproviders(){
 
     table.on("rowDblClick", function(e, row){
       //alert("Cell clicked: " + row.getData() + " "); //test  
-      var modalTarget = document.querySelector("#modal-2");
+      var modalTarget = document.querySelector("#modal-1");
       document.querySelector(".modal-fader").className += " active";
       modalTarget.className += " active";
       
       modalTarget.dataprovider_id = row.getData().id;
+
+      console.log(modalTarget.dataprovider_id)
+
+      document.querySelector("#modal-1 #dataprovider").value = row.getData().dataprovider
+      document.querySelector("#modal-1 #IFS").value = row.getData().IFS
+      document.querySelector("#modal-1 #type").value = row.getData().type
+      const provider_enabled = row.getData().enabled
+      //sidebar._container.querySelector('#control_element').value = local_data_cache[status_point] == 1? "iec60870-5-104://10.14.69.100:2404/SinglePointCommand/2818" : "iec60870-5-104://10.14.69.100:2404/SinglePointCommand/2819";
+      //document.querySelector("#modal-1 #enabled").selectedIndex = provider_enabled === 1? "True":"False"
+
+      const enabledSelect = document.querySelector("#modal-1 #enabled");
+
+      // const provider_enabled = 0;
+
+      enabledSelect.selectedIndex = provider_enabled === 1 ? 0 : 1;
+
       document.querySelectorAll(".modal-delete").forEach(function (deleteBtn) {
         deleteBtn.style.display = "inline-block";
       });
@@ -72,10 +88,27 @@ function init_dataproviders(){
   
     document.querySelectorAll(".modal-save").forEach(function (saveBtn) {
       saveBtn.addEventListener("click", function () {
-        var modalTarget = document.querySelector("#modal-2");
+        var modalTarget = '';
         let error_msg = document.querySelector('#modal-2_error-message');
+
+        // modalTarget.childNodes[3].value = '{            \n \
+        //   "dataprovider":"' + row.getData().dataprovider + '",\n \
+        //   "enabled": '+ row.getData().enabled +',             \n \
+        //   "IFS": "'+ row.getData().IFS +'",                   \n \
+        //   "type": "'+ row.getData().type +'"                  \n \
+        // }';
+
+        modalTarget = '{            \n \
+          "dataprovider":"' + document.querySelector("#modal-1 #dataprovider").value + '",\n \
+          "enabled": '+ document.querySelector("#modal-1 #enabled").value +',             \n \
+          "IFS": "'+ document.querySelector("#modal-1 #IFS").value +'",                   \n \
+          "type": "'+ document.querySelector("#modal-1 #type").value +'"                  \n \
+        }';
+        
         try{
-          let dataprovider = modalTarget.childNodes[3].value;
+          //let dataprovider = modalTarget.childNodes[3].value;
+          let dataprovider = modalTarget;
+          console.log(dataprovider)
           let temp = JSON.parse(dataprovider);
           socket.emit('edit_dataprovider', dataprovider, 
             function(ret){
@@ -95,6 +128,7 @@ function init_dataproviders(){
         }
       });
     });
+
 
     document.querySelectorAll(".modal-delete").forEach(function (deleteBtn) {     
       deleteBtn.addEventListener("click", function () {
