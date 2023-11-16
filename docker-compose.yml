@@ -83,31 +83,31 @@ services:
 
 
 # the HMI webserver the user interacts with
-  scada_client:
-    build: ./client
-    container_name: scada_client
-    hostname: scada_client
-    networks:
-      scadanetwork:
-        ipv4_address: 10.2.0.5
-    env_file:
-      - .env
-    environment:
-      - IFS_REDIS_HOST=redis
-      - IFS_REDIS_PASSWORD=${REDIS_PASSWORD}
-      - IFS_MONGODB_HOST=mongodb
-      - IFS_MONGODB_DB=${MONGO_USER_DB}
-      - IFS_MONGODB_USERNAME=${MONGO_USER_USERNAME}
-      - IFS_MONGODB_PASSWORD=${MONGO_USER_PASSWORD}
-      - IFS_INFLUXDB_HOST=http://influxdb:8086
-      - IFS_INFLUXDB_API=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
-      - IFS_INFLUXDB_ORG=${DOCKER_INFLUXDB_INIT_ORG}
-    depends_on:
-      - mongodb
-      - redis
-      - influxdb
-    ports:
-      - "5000:5000"
+#   scada_client:
+#     build: ./client
+#     container_name: scada_client
+#     hostname: scada_client
+#     networks:
+#       scadanetwork:
+#         ipv4_address: 10.2.0.5
+#     env_file:
+#       - .env
+#     environment:
+#       - IFS_REDIS_HOST=redis
+#       - IFS_REDIS_PASSWORD=${REDIS_PASSWORD}
+#       - IFS_MONGODB_HOST=mongodb
+#       - IFS_MONGODB_DB=${MONGO_USER_DB}
+#       - IFS_MONGODB_USERNAME=${MONGO_USER_USERNAME}
+#       - IFS_MONGODB_PASSWORD=${MONGO_USER_PASSWORD}
+#       - IFS_INFLUXDB_HOST=http://influxdb:8086
+#       - IFS_INFLUXDB_API=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
+#       - IFS_INFLUXDB_ORG=${DOCKER_INFLUXDB_INIT_ORG}
+#     depends_on:
+#       - mongodb
+#       - redis
+#       - influxdb
+#     ports:
+#       - "5000:5000"
 
 
 # timeseries dashboard, username: admin, password: admin
@@ -208,8 +208,6 @@ services:
     networks:
       scadanetwork:
         ipv4_address: 10.2.0.12
-      wannetwork:
-        ipv4_address: 10.1.0.2
     env_file:
       - .env
     environment:
